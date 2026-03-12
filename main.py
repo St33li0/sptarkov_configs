@@ -57,25 +57,27 @@ SPT_CONFIGS_FOLDER = {
 	"SPT": {"root":(f"{args["spt_install_dir"]}\\SPT\\user\\configs"),"files":[]}
 }
 
-# Walk directory to get mods
-for r,d,_f in os.walk(SPT_MODS_FOLDER["BepInEx"]["root"]):
-	if r != SPT_MODS_FOLDER["BepInEx"]["root"]: continue
-	SPT_MODS_FOLDER["BepInEx"]["files"].append(d)
-for r,d,_f in os.walk(SPT_CONFIGS_FOLDER["BepInEx"]["root"]):
-	if r != SPT_MODS_FOLDER["BepInEx"]["root"]: continue
-	SPT_CONFIGS_FOLDER["BepInEx"]["files"].append(d)
-for r,d,_f in os.walk(SPT_MODS_FOLDER["SPT"]["root"]):
-	if r != SPT_MODS_FOLDER["BepInEx"]["root"]: continue
-	SPT_MODS_FOLDER["SPT"]["files"].append(d)
-for r,d,_f in os.walk(SPT_CONFIGS_FOLDER["SPT"]["root"]):
-	if r != SPT_MODS_FOLDER["BepInEx"]["root"]: continue
-	SPT_CONFIGS_FOLDER["SPT"]["files"].append(d)
+def scan_directory(folder,allf=False):
+    files_list = []
+    with os.scandir(folder) as entries:
+        for entry in entries:
+            if entry.is_dir():
+                files_list.append(entry.name)  # Store the directory name
+            if allf and entry.is_file():
+            	files_list.append(entry.name)
+    return files_list
 
-# Walk folders to get dict of mods and their files
+SPT_MODS_FOLDER["BepInEx"]["files"].extend(scan_directory(SPT_MODS_FOLDER["BepInEx"]["root"]))
+SPT_CONFIGS_FOLDER["BepInEx"]["files"].extend(scan_directory(SPT_CONFIGS_FOLDER["BepInEx"]["root"]))
+SPT_MODS_FOLDER["SPT"]["files"].extend(scan_directory(SPT_MODS_FOLDER["SPT"]["root"]))
+SPT_CONFIGS_FOLDER["SPT"]["files"].extend(scan_directory(SPT_CONFIGS_FOLDER["SPT"]["root"]))
+
 mods = {}
 
 for file in SPT_MODS_FOLDER["BepInEx"]["files"]:
-	pass
+	mods[file].extend(scan_directory((f'{SPT_MODS_FOLDER["BepInEx"]["root"]}\\{file}')),True)
+for file in SPT_MODS_FOLDER["SPT"]["files"]:
+	mods[file].extend(scan_directory((f"{SPT_MODS_FOLDER["SPT"]["root"]}\\{file}")),True)
 
 for mod in mods:
-	pass
+	print(mod)
