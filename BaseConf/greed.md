@@ -33,11 +33,11 @@
 | GP Coin		| 500					| 5 Hundred		|
 ## Hideout
 ### Stash Size
-LV1 = 80
-LV2 = 120
-LV3 = 160
-LV4 = 180
-LV5 = 220
+LV1 = 80  
+LV2 = 120  
+LV3 = 160  
+LV4 = 180  
+LV5 = 220  
 ## Traders
 ### Miscellaneous
 + Remove Timer for New Quests
