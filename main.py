@@ -14,6 +14,7 @@ parser.suggest_on_error = True
 parser.add_argument("-i","--sptdir",default="C:\\SPT")
 parser.add_argument("-s","--stagingdir",default="C:\\SPT\\SPT_CBMM_Staging")
 parser.add_argument("-u","--url",default="https://github.com/St33li0/sptarkov_configs")
+parser.add_argument("-f","--force",default=False,action="store_true")
 
 # def get_arg_dict(args):
 # 	return {
@@ -31,16 +32,17 @@ args = {
 	"modpack_source_url": parsed.url
 }
 
-print(f"""The program is running with the following variables:
-		SPT Install Directory :: {args["spt_install_dir"]}
-		Mod Staging Directory :: {args["mod_staging_dir"]}
-		  Modpack Source URL  :: {args["modpack_source_url"]}
-		""")
-print("Are the above variables set correctly? [Y/n]")
-i = input()
-if i.lower() != "y":
-	parser.print_help()
-	sys.exit(0)
+if not parsed.force:
+	print(f"""The program is running with the following variables:
+			SPT Install Directory :: {args["spt_install_dir"]}
+			Mod Staging Directory :: {args["mod_staging_dir"]}
+			  Modpack Source URL  :: {args["modpack_source_url"]}
+			""")
+	print("Are the above variables set correctly? [Y/n]")
+	i = input()
+	if i.lower() != "y":
+		parser.print_help()
+		sys.exit(0)
 
 SPT_MODS_FOLDER = {
 	"BepInEx": {"root":(f"{args["spt_install_dir"]}\\BepInEx\\plugins"),"files":[]},
@@ -63,5 +65,10 @@ for r,d in os.walk(SPT_CONFIGS_FOLDER["SPT"]["root"]):
 
 # Walk folders to get dict of mods and their files
 mods = {}
-for r,d,f in SPT_MODS_FOLDER["BepInEx"]["files"]:
+
+for file in SPT_MODS_FOLDER["BepInEx"]["files"]:
+	for r,d,f in os.walk(file):
+		print("File",file,r,d,f)
+	
+for mod in mods:
 	pass
